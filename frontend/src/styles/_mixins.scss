@@ -1,0 +1,65 @@
+@import "./variables";
+@import "./animations";
+
+$breakpoints: (
+  xxs: 320px,
+  xs: 360px,
+  sm: 560px,
+  md: 768px,
+  mdx: 960px,
+  lg: 1024px,
+  xl: 1200px,
+  xxl: 1600px,
+  hd: 1920px,
+);
+
+/**
+ * This is a flexible mobile-first media query
+ * Use Examples:
+ *   @include media(md) { ... } breakpoint will become the $breakpoint md (768px)
+ *   @include media(345px) { ... } breakpoint will become a custom 345px
+ *   @include media(md, lg) { ... } breakpoint will be from md(768px) up to lg(1024px minus 1px) 
+ *   
+ * An optional third parameter can be passed to trigger if the device is on landscape mode
+ * Use Examples: 
+ *   @include media(md, 0, true) { ... } breakpoint will trigger if the width starts at 768px and the device is on landscape (second argument must be 0)
+ *   @include media(md, lg, true) { ... } breakpoint will trigger from md(768px) up to lg(1024px minus 1px) if on landscape
+ */
+@mixin media($breakpoint, $limit: 0, $landscape: false) {
+  $screen: $breakpoint;
+
+  @if map-has-key($breakpoints, $breakpoint) {
+    $screen: map-get($breakpoints, $breakpoint);
+  }
+
+  @if $limit != 0 and $landscape != true {
+    @if map-has-key($breakpoints, $limit) {
+      $limit: map-get($breakpoints, $limit) - 1;
+    }
+    @media (min-width: $screen) and (max-width: $limit) {
+      @content;
+    }
+  } @else if $limit != 0 and $landscape {
+    @if map-has-key($breakpoints, $limit) {
+      $limit: map-get($breakpoints, $limit) - 1;
+    }
+    @media (min-width: $screen) and (max-width: $limit) and (orientation: landscape) {
+      @content;
+    }
+  } @else if $landscape {
+    @media (min-width: $screen) and (orientation: landscape) {
+      @content;
+    }
+  } @else {
+    @media (min-width: $screen) {
+      @content;
+    }
+  }
+}
+
+/*
+ * Transform pixels to their rem equivalent
+ */
+@function rem($pixelValue, $remBase: 16) {
+  @return $pixelValue / $remBase * 1rem;
+}

@@ -1,0 +1,114 @@
+$danger: #f34545;
+$danger100: #ffecec;
+$success: #00d05e;
+$success100: #eefdf2;
+$warning: #e99700;
+$warning100: #fff7ec;
+$info: #45c2f3;
+$info100: #ecf9ff;
+
+.alert-banner-info {
+  background-color: $info100;
+  border: 1px solid $info;
+  color: $info;
+
+  figure {
+    background: $info;
+  }
+
+  button svg {
+    fill: $info;
+  }
+}
+.alert-banner-success {
+  background-color: $success100;
+  border: 1px solid $success;
+  color: $success;
+
+  figure {
+    background: $success;
+  }
+
+  button svg {
+    fill: $success;
+  }
+}
+.alert-banner-warning {
+  background-color: $warning100;
+  border: 1px solid $warning;
+  color: $warning;
+
+  figure {
+    background: $warning;
+  }
+
+  button svg {
+    fill: $warning;
+  }
+}
+.alert-banner-error {
+  background-color: $danger100;
+  border: 1px solid $danger;
+  color: $danger;
+
+  figure {
+    background: $danger;
+  }
+
+  button svg {
+    fill: $danger;
+  }
+}
+
+.alert-banner {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: calc(100vw - 2rem);
+  max-width: 450px;
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  min-height: 60px;
+  border-radius: 10px;
+  margin: 1rem;
+  box-shadow: var(--box-shadow);
+  overflow: hidden;
+  z-index: 100;
+
+  figure {
+    width: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    svg {
+      height: 50%;
+      width: 50%;
+      fill: #fefefe;
+    }
+  }
+
+  h2,
+  p {
+    color: inherit;
+    font-size: 1rem;
+  }
+
+  button {
+    display: flex;
+    align-items: center;
+    width: 3rem;
+
+    svg {
+      height: 2rem;
+      width: 2rem;
+    }
+  }
+
+  .message {
+    flex: 1;
+    text-align: left;
+    padding: 1rem;
+  }
+}

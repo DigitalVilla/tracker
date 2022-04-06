@@ -1,0 +1,19 @@
+@import "../../styles/mixins";
+
+.pageLayout {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.content {
+  flex: 1;
+  padding: $mobile-nav-height rem(20);
+  position: relative;
+  z-index: 1;
+
+  @include media(md) {
+    padding: $desktop-nav-height rem(20);
+    max-width: $content-max-width;
+    margin: 0 auto;
+  }
+}

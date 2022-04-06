@@ -1,0 +1,39 @@
+@import "../../styles/mixins";
+
+.entry {
+  display: flex;
+  flex-direction: column;
+  padding: rem(10);
+  background-color: $light-grey;
+  border-radius: rem(10);
+  margin-top: rem(10);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  font-size: rem(12);
+  color: rgb(87, 87, 87);
+}
+
+.name {
+  display: flex;
+  flex-direction: column;
+
+  flex: 2;
+}
+
+.container {
+  padding: rem(5) 0;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  button,
+  span {
+    flex: 1;
+    font-size: rem(14);
+    text-align: end;
+  }
+}

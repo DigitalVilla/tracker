@@ -1,0 +1,159 @@
+# https://www.serverless.com/framework/docs/providers/aws/guide/serverless.yml/
+service: tracker
+frameworkVersion: '3'
+
+plugins:
+  - serverless-webpack
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  stage: ${env:STAGE}
+  region: ${env:AWS_REGION}
+  logRetentionInDays: ${self:custom.logRetention.${self:provider.stage}}
+  memorySize: 256
+  httpApi:
+    cors: true
+  timeout: 10
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+          Resource:
+            - !GetAtt CalsTable.Arn
+            - 'arn:aws:dynamodb:${self:provider.region}:*:table/${self:custom.tableName}/index/*'
+
+functions:
+# USERS 
+  setUser:
+    handler: src/lambdas/user/setUser.handler
+    events:
+      - httpApi:
+          path: /users
+          method: POST
+  getUser:
+    handler: src/lambdas/user/getUser.handler
+    events:
+      - httpApi:
+          path: /users
+          method: GET
+  updateUser:
+    handler: src/lambdas/user/updateUser.handler
+    events:
+      - httpApi:
+          path: /users
+          method: PUT
+  deleteUser:
+    handler: src/lambdas/user/deleteUser.handler
+    events:
+      - httpApi:
+          path: /users
+          method: DELETE
+# ENTRIES 
+  setEntry:
+    handler: src/lambdas/entry/setEntry.handler
+    events:
+      - httpApi:
+          method: POST
+          path: /users/entries
+  getEntry:
+    handler: src/lambdas/entry/getEntry.handler
+    events:
+      - httpApi:
+          path: /users/entries
+          method: GET
+  updateEntry:
+    handler: src/lambdas/entry/updateEntry.handler
+    events:
+      - httpApi:
+          path: /users/entries
+          method: PUT
+  deleteEntry:
+    handler: src/lambdas/entry/deleteEntry.handler
+    events:
+      - httpApi:
+          path: /users/entries
+          method: DELETE
+# AUTH
+  login:
+    handler: src/lambdas/auth/login.handler
+    events:
+      - httpApi:
+          path: /users/login
+          method: POST
+  signup:
+    handler: src/lambdas/auth/signup.handler
+    events:
+      - httpApi:
+          path: /users/signup
+          method: POST
+
+# Query Business Logic
+  query:
+    handler: src/lambdas/queries/query.handler
+    events:
+      - httpApi:
+          path: /app/query
+          method: POST
+  devQuery:
+    handler: src/lambdas/queries/devQuery.handler
+    events:
+      - httpApi:
+          path: /app/dev/query
+          method: POST
+
+resources:
+  Resources:
+    CalsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.tableName}
+        AttributeDefinitions:
+          - AttributeName: PK
+            AttributeType: S
+          - AttributeName: SK
+            AttributeType: S
+          - AttributeName: GSI1PK
+            AttributeType: S
+          - AttributeName: GSI1SK
+            AttributeType: S
+        KeySchema:
+          - AttributeName: PK
+            KeyType: HASH
+          - AttributeName: SK
+            KeyType: RANGE
+        GlobalSecondaryIndexes:
+          - IndexName: GSI1
+            KeySchema:
+              - AttributeName: GSI1PK
+                KeyType: HASH
+              - AttributeName: GSI1SK
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+        BillingMode: PAY_PER_REQUEST
+
+package:
+  individually: true
+
+custom:
+  tableName: ${env:TABLE_NAME}-${env:STAGE}
+  logRetention:
+    prod: 90
+    local: 1
+    dev: 7
+  webpack:
+    webpackConfig: 'webpack.config.js'
+    packager: 'yarn'
+    excludeFiles: src/**/*.test.js
+    keepOutputDirectory: true
+  serverless-offline:
+    httpPort: 4321

@@ -1,0 +1,171 @@
+@import "../../styles/mixins";
+
+.navigation {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 12;
+}
+
+.linksContainer {
+  background: #dcdcdc;
+  height: $mobile-nav-height;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 rem(20);
+  margin: 0 auto;
+
+  svg {
+    fill: $primary;
+  }
+}
+
+.logo {
+  height: rem(30);
+  width: rem(45);
+
+  @include media(lg) {
+    height: rem(40);
+    width: rem(65);
+  }
+}
+
+.mobileMenu {
+  position: absolute;
+  width: 100%;
+  height: 0;
+  top: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background-color: #dcdcdc;
+  z-index: 0;
+  transition: all 0.3s ease;
+  opacity: 0;
+
+  &Open {
+    opacity: 1;
+    padding-top: calc(#{$mobile-nav-height} + 4vh);
+    transition: all 0.2s ease;
+    z-index: 1;
+    height: 50vh;
+
+    @include media(sm) {
+      height: 40vh;
+    }
+
+    @include media(1px, 0, true) {
+      overflow-y: auto;
+    }
+  }
+}
+
+.menu {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: $content-max-width;
+  position: relative;
+  z-index: 2;
+
+  .link {
+    display: none;
+  }
+  @include media(lg) {
+    .link {
+      display: flex;
+    }
+  }
+}
+
+.link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: none;
+  opacity: 0.5;
+  transition: opacity 0.2s ease;
+  font-family: "Eurostile";
+  padding: rem(15);
+
+  span {
+    font-weight: 700;
+    color: $primary;
+    display: block;
+  }
+  svg {
+    height: rem(20);
+    width: rem(20);
+    margin-right: rem(10);
+  }
+}
+
+.linkActive {
+  opacity: 1;
+}
+
+.button {
+  font-family: "Eurostile";
+  border-radius: rem(30);
+  font-weight: 700;
+  font-size: rem(12);
+  height: rem(24);
+  width: rem(120);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 rem(5);
+  border: 2px solid $primary;
+  color: $primary;
+  transition: all 0.2s ease;
+}
+
+.buttonActive {
+  background-color: white;
+}
+
+.mobileButton {
+  height: rem(20);
+  width: rem(26);
+  position: relative;
+  border-radius: 100%;
+  transition: 0.3s;
+  cursor: pointer;
+  background: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  &Open {
+    .bar {
+      &:nth-of-type(1) {
+        animation: rotateR 0.4s cubic-bezier(0.5, 0.2, 0.2, 1);
+        transform: translateY(9px) rotate(-45deg);
+      }
+      &:nth-of-type(2) {
+        animation: fade 0.4s cubic-bezier(0.1, 0.8, 0.1, 1);
+        opacity: 0;
+      }
+      &:nth-of-type(3) {
+        transform: translateY(-9px) rotate(45deg);
+        animation: rotateL 0.4s cubic-bezier(0.5, 0.2, 0.2, 1);
+      }
+    }
+  }
+
+  @include media(lg) {
+    display: none;
+  }
+}
+
+.bar {
+  height: rem(2);
+  width: rem(26);
+  display: block;
+  position: relative;
+  background-color: $primary;
+  transition: 0.4s;
+}
